@@ -1,6 +1,6 @@
 from math import sin
 from lib.expression import Expression
-from .methods import gradient_descent, fastest_descent, \
+from .methods import gradient_descent, nesterov, \
         heavy_ball, newton
 
 expressions = [
@@ -9,7 +9,7 @@ expressions = [
     Expression(
         "y = x1 ^ 2 + (x2 - 1) ^ 2",
         lambda args: args[0] ** 2 + (args[1] - 1) ** 2,
-        2,
+        2, gamma=0.00001
     ), 
     Expression(
         "y = (x1 ^ 2 + 2) * ((x2 - 239) ^ 2 + 3) * ((x3 - 30) ^ 2 + 5)",
@@ -23,8 +23,8 @@ def run():
         print(expr)
 
         print(f"Gradient descent: {gradient_descent(expr)}")
-        print("Fast gradient descent: ")
-        print("Heavy ball:")
+        print(f"Heavy ball: {heavy_ball(expr)}")
+        print(f"Nesterov: {nesterov(expr)}")
         print("Newton:")
 
         print()
