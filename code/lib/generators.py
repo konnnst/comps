@@ -6,6 +6,9 @@ def get_random_matrix(n):
     return [[random.random() for i in range(n)] for k in range(n)]
 
 
+def get_random_vector(n):
+    return [random.random() for i in range(n)]
+
 def get_hilbert_matrix(n):
     return linalg.hilbert(n)
 

@@ -19,4 +19,6 @@ class Problem:
         return linalg.solve(self.a, self.b)
 
     def get_solution_delta(self, solution):
-        return linalg.norm(linalg.matmul(self.a, solution) - self.b)
+        real_solution = linalg.solve(self.a, self.b)
+        delta = linalg.norm(solution - real_solution)
+        return delta

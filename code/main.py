@@ -1,4 +1,4 @@
-from tasks.opt.task import run
+from tasks.slau_solver.task import run
 
 
 def main():

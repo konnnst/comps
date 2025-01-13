@@ -1,4 +1,5 @@
 from numpy import linalg
+import numpy as np
 
 from lib.slau import Problem
 
@@ -70,14 +71,28 @@ def get_qr_decomposition(matrix):
     r = linalg.matmul(linalg.inv(q), matrix)
     return linalg.qr(matrix)
 
-def solve(m, t, b):
-    answer = []
 
-    for i in range(len(m)):
-        prevsum = 0
-        for k in range(len(answer)):
-            prevsum += 
+def solve_lu(problem, l, u):
+    # Forward substitution (Ly = b)
+    n = len(problem.b)
+    y = np.zeros(n)
+    for i in range(n):
+        y[i] = problem.b[i] - np.dot(l[i, :i], y[:i])
+    
+    # Backward substitution (Ux = y)
+    x = np.zeros(n)
+    for i in range(n-1, -1, -1):
+        x[i] = (y[i] - np.dot(u[i, i + 1:], x[i + 1:])) / u[i, i]
+    
+    return x
 
-        answer.append((b[i] - prevsum) / m[i][i])
 
-    return answer
+def solve_qr(problem, q, r):
+    c = q.T @ problem.b
+
+    n = r.shape[1]
+    x = np.zeros(n)
+    for i in range(n-1, -1, -1):
+        x[i] = (c[i] - np.dot(r[i, i + 1:], x[i + 1:])) / r[i, i]
+
+    return x
