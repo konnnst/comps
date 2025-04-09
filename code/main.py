@@ -1,4 +1,4 @@
-from tasks.criteria.task import run
+from tasks.opt.task import run
 
 
 def main():
