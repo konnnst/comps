@@ -8,8 +8,8 @@ from lib.generators import get_identity_matrix, get_zero_matrix
 def iterate(problem, m, n, eps):
     solution = [1 for _ in range(len(problem.a))]
 
-    b = linalg.matmul(linalg.inv(m), n)
-    g = linalg.matmul(linalg.inv(m), problem.b)
+    b = linalg.inv(m) @ n
+    g = linalg.inv(m) @ problem.b
 
     initial_time = time()
     while problem.get_solution_delta(solution) > eps and time() - initial_time < 15:
