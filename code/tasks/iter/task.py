@@ -21,7 +21,7 @@ def run():
         print(f"Problem #{i}")
         print(problem)
 
-        for eps in [1000, 100, 1, 0.1, 0.0001]:
+        for eps in [1000, 100, 1, 0.1, 0.001]:
             print(f"Solve with eps = {eps}")
 
             si_solution = solve_simple_iter(problem, eps)

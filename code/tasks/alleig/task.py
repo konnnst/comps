@@ -30,8 +30,8 @@ def run():
             ej_mod = eigen_jacobi(matrix, ChoiceMethod.MAX_OFF_DIAG, epsilon)
             print_evs("Jacobi, max not diagonal", ej_mod)
 
-#            ej_obo = eigen_jacobi(matrix, ChoiceMethod.ONE_BY_ONE)
-#            print_evs("Jacobi, one by one", ej_obo)
+            ej_obo = eigen_jacobi(matrix, ChoiceMethod.ONE_BY_ONE, epsilon)
+            print_evs("Jacobi, one by one", ej_obo)
 
             print()
 

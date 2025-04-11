@@ -1,4 +1,5 @@
 import numpy as np
+from time import time
 from numpy import linalg
 from enum import Enum
 from lib.eigenvector import Eigenvector
@@ -7,6 +8,7 @@ from lib.eigenvector import Eigenvector
 class ChoiceMethod(Enum):
     MAX_OFF_DIAG = "max_off_diag"
     ONE_BY_ONE = "one_by_one"
+    BARRIER = "barrier"
 
 
 def get_max_off_diag(matrix, n, prev_p=None, prev_q=None):
@@ -20,23 +22,52 @@ def get_max_off_diag(matrix, n, prev_p=None, prev_q=None):
     return p, q
 
 
-def get_one_by_one():
-    pass
+def gg_radius(matrix, i):
+    r = sum(matrix[i]) - matrix[i][i]
+    return r
 
 
-def eigen_jacobi(matrix, method, library, eps=1e-10, max_iter=10000):
+def gg_condition_fit(matrix, eps):
+    for i in range(len(matrix)):
+        if gg_radius(matrix, i) > eps:
+            return False
+
+    return True
+
+
+def eigen_jacobi(matrix, method, eps=1e-10, max_iter=10000):
     n = matrix.shape[0]
 
     V = np.eye(n)
     iterations = 0
 
-    for _ in range(max_iter):
+    p, q = 0, 0
+    evs = []
+    for i in range(n):
+        ev = Eigenvector(V[i], matrix[i][i], iterations)
+        evs.append(ev)
+
+    start = time()
+    while time() - start < 10:
         if method == ChoiceMethod.MAX_OFF_DIAG:
             p, q = get_max_off_diag(matrix, n)
             if matrix[p][q] < eps:
                 break
+        elif method == ChoiceMethod.ONE_BY_ONE:
+            if q == n - 1:
+                p, q = p + 1, 0
+            else:
+                q += 1
+
+            if p == n:
+                p, q = 0, 0
+
+            if p == q:
+                continue
+        elif method == ChoiceMethod.BARRIER:
+            raise NotImplementedError()
         else:
-            p, q = get_max_off_diag()
+            raise NotImplementedError()
 
         if matrix[p, p] == matrix[q, q]:
             phi = np.pi / 4
@@ -61,6 +92,9 @@ def eigen_jacobi(matrix, method, library, eps=1e-10, max_iter=10000):
             ev = Eigenvector(V[i], matrix[i][i], iterations)
             evs.append(ev)
 
+        if gg_condition_fit(matrix, eps):
+            break
+
     return evs
 
 
@@ -74,12 +108,5 @@ def eigen_lib(matrix):
     return result
 
 
-def gg_radius(matrix, i):
-    r = sum(matrix[i]) - matrix[i][i]
-    return r
-
-
-def print_evs(type, evs):
-    print(type)
-    for i, ev in enumerate(evs, 1):
-        print(f"{i}.\n{ev}")
+def print_evs(method, evs):
+    print(f"{method}: {sorted([float(round(ev.value, 3)) for ev in evs])}")

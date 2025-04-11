@@ -6,7 +6,7 @@ from lib.generators import get_identity_matrix, get_zero_matrix
 
 
 def iterate(problem, m, n, eps):
-    solution = [0 for _ in range(len(problem.a))]
+    solution = [1 for _ in range(len(problem.a))]
 
     b = linalg.matmul(linalg.inv(m), n)
     g = linalg.matmul(linalg.inv(m), problem.b)

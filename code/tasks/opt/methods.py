@@ -1,5 +1,6 @@
 from numpy import array
 from scipy.linalg import norm
+from scipy.differentiate import hessian
 from time import time
 from lib.expression import Expression
 
@@ -53,8 +54,8 @@ def nesterov(expr, epsilon=0.01):
         if x_diff < epsilon:
             break
         
-        x = x_prev
-        y = y_prev
+        x_prev = x
+        y_prev = y
 
     return x, x_diff
 
@@ -62,3 +63,10 @@ def nesterov(expr, epsilon=0.01):
 
 def newton(expr, eps=0.001):
     x_prev = array([0 for _ in range(expr.dim())])
+    
+    start = 0
+    while time() - start < 10:
+        pass
+
+
+
