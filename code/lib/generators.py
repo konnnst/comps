@@ -1,4 +1,5 @@
 from scipy import linalg
+from numpy import array
 import random
 
 
@@ -9,6 +10,7 @@ def get_random_matrix(n):
 def get_random_vector(n):
     return [random.random() for i in range(n)]
 
+
 def get_hilbert_matrix(n):
     return linalg.hilbert(n)
 
@@ -16,6 +18,9 @@ def get_hilbert_matrix(n):
 def get_identity_matrix(n):
     return [[int(k == i) for k in range(n)] for i in range(n)]
 
+
+def get_identity_vector(n):
+    return array([1 for _ in range(n)], dtype="float64")
 
 def get_zero_matrix(n):
     return [[0 for _ in range(n)] for _ in range(n)]

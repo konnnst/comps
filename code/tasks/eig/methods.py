@@ -3,73 +3,69 @@ from numpy import array, linalg, dot
 from time import time
 
 from lib.eigenvector import Eigenvector
+from lib.generators import get_hilbert_matrix, get_identity_vector
 
 
-def power_method(matrix, eps=1e-6, max_iter=100):
+def power_method(matrix, library_vector: Eigenvector, eps, iter_limit=20000):
     n = matrix.shape[0]
+    x_prev = get_identity_vector(n)
 
-    if matrix.shape[0] != matrix.shape[1]:
-        raise ValueError("Matrix A must be square.")
-    
-    b = np.random.rand(n)
-    
-    lambda_approx = 0.0
-    
-    for i in range(max_iter):
-        b_new = matrix @ b
-        
-        index = np.argmax(np.abs(b_new))
-        lambda_new = b_new[index]
-        
-        if np.abs(lambda_new - lambda_approx) < eps:
-            eigenvalue = (b.T @ matrix @ b) / (b.T @ b)
-            result = Eigenvector(b, eigenvalue, i + 1)
+    iter_count = 0
+    while iter_count < iter_limit:
+        x = matrix @ x_prev
+        evalue = (x @ x_prev) / (x_prev @ x_prev)
+        x /= linalg.norm(x)
+
+        if abs(library_vector.value - evalue) < eps:
+            result = Eigenvector(x, evalue, iter_count)
             break
-        
-        lambda_approx = lambda_new
-        b = b_new / lambda_new
-    else:
-        result = None
-    
-    return result
-    
+        result = Eigenvector(x, evalue, iter_count)
 
-def product_method(matrix, eps=1e-6, max_iter=100):
+
+        iter_count += 1
+        x_prev = x
+    else:
+        result = Eigenvector(None, None, iter_count)
+
+    return result
+
+
+def product_method(matrix, library_vector, eps, iter_limit=20000):
     n = matrix.shape[0]
+    x_prev = get_identity_vector(n)
+    y_prev = get_identity_vector(n)
 
-    if matrix.shape[0] != matrix.shape[1]:
-        raise ValueError("Matrix A must be square.")
-    
-    x = np.random.rand(n)
-    y = np.random.rand(n)
-    
-    lambda_approx = 0.0
-    
-    for i in range(max_iter):
-        x_new = matrix @ x
-        y_new = np.transpose(matrix) @ y
+    iter_count = 0
+    while iter_count < iter_limit:
+        iter_count += 1
 
-        lambda_new = dot(x_new, y_new) / dot(x, y_new)
-        
-        if np.abs(lambda_new - lambda_approx) < eps:
-            eigenvalue = lambda_new
-            result = Eigenvector(x_new, eigenvalue, i + 1)
+        x = matrix @ x_prev
+        y = matrix.transpose() @ y_prev
+        evalue = (x @ y) / (x_prev @ y)
+        x /= linalg.norm(x)
+        y /= linalg.norm(y)
+
+        if abs(library_vector.value - evalue) < eps:
+            result = Eigenvector(x, evalue, iter_count)
             break
-        
-        lambda_approx = lambda_new
-        x = x_new  / lambda_new
-        y = y_new  / lambda_new
+        result = Eigenvector(x, evalue, iter_count)
+
+        x_prev = x
     else:
-        result = None
-    
+        result = Eigenvector(None, None, iter_count)
+
     return result
+
 
 def library_method(matrix):
     evs = np.linalg.eig(matrix)
-    result = Eigenvector(None, 0, 0)
+    eigenvalues, eigenvectors = evs.eigenvalues, evs.eigenvectors.transpose()
+    print("Eigenvalues: ", eigenvalues)
+    print("Eigenvectors: ", eigenvectors)
 
-    for eval, evec in zip(evs.eigenvalues, evs.eigenvectors):
-        if abs(eval) > abs(result.value):
-            result = Eigenvector(evec, eval, 0)
+    result = Eigenvector(None, 0, 0)
+    for evalue, evec in zip(eigenvalues, eigenvectors):
+        if abs(evalue) > abs(result.value):
+            result = Eigenvector(evec / linalg.norm(evec), evalue, 0)
 
     return result
