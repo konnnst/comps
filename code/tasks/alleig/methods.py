@@ -24,37 +24,20 @@ def get_one_by_one():
     pass
 
 
-def eigen_jacobi(matrix, method, eps=1e-10, max_iter=1000):
-    """
-    Compute the eigenvalues and eigenvectors of a symmetric matrix A using the Jacobi method.
-
-    Parameters:
-        A (numpy.ndarray): Symmetric square matrix.
-        tol (float): Tolerance for convergence (default: 1e-10).
-        max_iter (int): Maximum number of iterations (default: 1000).
-        
-    Returns:
-        numpy.ndarray: Eigenvalues (diagonal elements of the diagonalized matrix).
-        numpy.ndarray: Eigenvectors (columns of the orthogonal transformation matrix).
-    """
+def eigen_jacobi(matrix, method, library, eps=1e-10, max_iter=10000):
     n = matrix.shape[0]
-    if matrix.shape[0] != matrix.shape[1]:
-        raise ValueError("Matrix A must be square.")
-    if not np.allclose(matrix, matrix.T):
-        raise ValueError("Matrix A must be symmetric.")
-    
+
     V = np.eye(n)
     iterations = 0
-    
+
     for _ in range(max_iter):
         if method == ChoiceMethod.MAX_OFF_DIAG:
-            p,q = get_max_off_diag(matrix, n)
+            p, q = get_max_off_diag(matrix, n)
             if matrix[p][q] < eps:
                 break
         else:
             p, q = get_max_off_diag()
 
-        # Compute the rotation angle
         if matrix[p, p] == matrix[q, q]:
             phi = np.pi / 4
         else:
@@ -72,12 +55,11 @@ def eigen_jacobi(matrix, method, eps=1e-10, max_iter=1000):
 
         V = V @ R
         iterations += 1
-    
 
-    evs = []
-    for i in range(n):
-        ev = Eigenvector(V[i], matrix[i][i], iterations)
-        evs.append(ev)
+        evs = []
+        for i in range(n):
+            ev = Eigenvector(V[i], matrix[i][i], iterations)
+            evs.append(ev)
 
     return evs
 

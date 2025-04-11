@@ -1,4 +1,4 @@
-from tasks.eig.task import run
+from tasks.alleig.task import run
 
 
 def main():

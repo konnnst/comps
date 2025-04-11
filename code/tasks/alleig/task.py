@@ -1,6 +1,7 @@
 from numpy import array
 
-from lib.generators import get_identity_matrix, get_hilbert_matrix
+from lib.generators import get_identity_matrix, get_hilbert_matrix, \
+        get_random_matrix
 from lib.printers import print_matrix
 
 from .methods import eigen_jacobi, eigen_lib, print_evs, ChoiceMethod
@@ -10,6 +11,7 @@ matrices = [
     array(get_hilbert_matrix(5)),
     array(get_identity_matrix(3)),
     array([[1, 0, 0], [0, 2, 0], [0, 0, 3]]),
+    array(get_random_matrix(3)),
 ]
 
 def run():
