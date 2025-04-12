@@ -7,7 +7,7 @@ def get_random_matrix(n):
     return [[random.random() for i in range(n)] for k in range(n)]
 
 
-def get_random_matrix(n):
+def get_random_symmetric_matrix(n):
     m = array([[random.random() for i in range(n)] for k in range(n)])
     return m + m.transpose()
 
