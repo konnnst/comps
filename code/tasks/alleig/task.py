@@ -4,7 +4,8 @@ from lib.generators import get_identity_matrix, get_hilbert_matrix, \
         get_random_matrix
 from lib.printers import print_matrix
 
-from .methods import eigen_jacobi, eigen_lib, print_evs, ChoiceMethod
+from .methods import eigen_jacobi, eigen_lib
+from .choice_methods import max_off_diag, gg_opt
 
 matrices = [
     array(get_hilbert_matrix(2)),
@@ -14,25 +15,32 @@ matrices = [
     array(get_random_matrix(3)),
 ]
 
+choice_methods = [
+    max_off_diag,
+    gg_opt,
+]
+
+epsilons = [
+    10,
+    1,
+    0.1,
+    0.001,
+]
+
 def run():
     for i, matrix in enumerate(matrices, 1):
         print(f"Matrix #{i}")
         print_matrix(matrix)
         print()
 
+        print("Library")
         el = eigen_lib(matrix)
-        print_evs("Library", el)
-        print()
+        print(el)
 
-        for epsilon in [10, 1, 0.1, 0.001]:
-            print(f"Epsilon: {epsilon}")
+        for method in choice_methods:
+            print("Method: ", method)
+            for epsilon in epsilons:
+                ev = eigen_jacobi(matrix, method, epsilon)
+                print(ev)
 
-            ej_mod = eigen_jacobi(matrix, ChoiceMethod.MAX_OFF_DIAG, epsilon)
-            print_evs("Jacobi, max not diagonal", ej_mod)
-
-#            ej_obo = eigen_jacobi(matrix, ChoiceMethod.ONE_BY_ONE)
-#            print_evs("Jacobi, one by one", ej_obo)
-
-            print()
-
-        print("\n\n\n")
+        print("\n")
