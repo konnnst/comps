@@ -34,4 +34,4 @@ class Expression:
         return approx_fprime(point, self._function)
 
     def hess(self, point):
-        return hessian(self._function, point)
+        return hessian(self._function, point).ddf
