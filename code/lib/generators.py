@@ -25,7 +25,8 @@ def get_identity_matrix(n):
 
 
 def get_identity_vector(n):
-    return array([1 for _ in range(n)], dtype="float64")
+    return array([0.5 for _ in range(n)], dtype="float64")
+
 
 def get_zero_matrix(n):
     return [[0 for _ in range(n)] for _ in range(n)]

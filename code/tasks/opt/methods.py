@@ -1,9 +1,9 @@
-from numpy import array
-import numpy as np
 from time import time
 from scipy.linalg import norm
+import numpy as np
 
 from .minimum import Minimum
+from lib.generators import get_identity_vector
 
 
 def gradient_descent_step(expr, epsilon, x, y, x_prev):
@@ -37,39 +37,33 @@ def newton_step(expr, epsilon, x, y, x_prev):
     grad = expr.grad(x)
     hess = expr.hess(x)
 
-    if norm(grad) >= epsilon:
-        try:
-            delta = np.linalg.solve(hess, -grad)
-        except np.linalg.LinAlgError:
-            delta = -grad
+    try:
+        delta = np.linalg.solve(hess, -grad)
+    except np.linalg.LinAlgError:
+        delta = -grad
 
-        alpha = 1.0
-        while True:
-            x_new = x + alpha * delta
-            try:
-                val_new = expr(x_new)
-                if val_new < val + 1e-4 * alpha * grad.dot(delta) or alpha < 1e-10:
-                    break
-            except:
-                pass
-            alpha *= 0.5
-        x = x_new
+    alpha = 1.0
+    while True:
+        x_new = x + alpha * delta
+        val_new = expr(x_new)
+        if val_new < val + 1e-4 * alpha * grad.dot(delta) or alpha < 1e-10:
+            break
+        alpha *= 0.5
+    x = x_new
 
     return x, y, None, "Newton"
 
 
-def optimization_loop(optimization_step, expr, epsilon=0.01, timeout=5):
-    x = array([1 for _ in range(expr.dim())])
-    x_prev = array([1 for _ in range(expr.dim())])
-    y = array([1 for _ in range(expr.dim())])
+def optimization_loop(step, expr, epsilon=0.01, timeout=5):
+    x, x_prev, y = [get_identity_vector(expr.dim())] * 3
 
     start = time()
     iterations = 0
     while time() - start < timeout:
         iterations += 1
-        x, y, x_prev, method_name = optimization_step(expr, epsilon, x, y, x_prev)
+        x, y, x_prev, method = step(expr, epsilon, x, y, x_prev)
         if norm(expr.grad(x)) < epsilon:
             break
 
-    minimum = Minimum(x, norm(expr.grad(x)), iterations, time() - start, method_name)
+    minimum = Minimum(x, norm(expr.grad(x)), iterations, time() - start, method)
     return minimum
