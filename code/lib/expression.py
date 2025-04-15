@@ -1,5 +1,4 @@
-from scipy.optimize import approx_fprime 
-from scipy.differentiate import hessian
+from scipy.optimize import approx_fprime
 
 class Expression:
     def __init__(
@@ -33,5 +32,11 @@ class Expression:
     def grad(self, point):
         return approx_fprime(point, self._function)
 
+
     def hess(self, point):
-        return hessian(self._function, point).ddf
+        hessian = []
+        for i in range(self._dim):
+            def grad(point):
+                return approx_fprime(point, self._function)[i]
+            hessian.append(approx_fprime(point, grad))
+        return hessian

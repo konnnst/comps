@@ -1,6 +1,5 @@
 from math import sin, pi
 from lib.expression import Expression
-from .methods import gradient_descent, nesterov, newton, heavy_ball
 from .methods import optimization_loop, gradient_descent_step, \
         nesterov_step, heavy_ball_step, newton_step
 
@@ -21,17 +20,11 @@ expressions = [
     ),
 ]
 
-#methods = [
-#    gradient_descent_step,
-#    nesterov_step,
-#    heavy_ball_step,
-#    newton_step,
-#]
 methods = [
-    gradient_descent,
-    nesterov,
-    heavy_ball,
-    newton,
+    gradient_descent_step,
+    nesterov_step,
+    heavy_ball_step,
+    newton_step,
 ]
 
 
@@ -39,6 +32,5 @@ def run():
     for expr in expressions:
         print(expr)
         for method in methods:
-            print(method(expr))
-        #    print(optimization_loop(method, expr))
+            print(optimization_loop(method, expr))
         print()
