@@ -1,7 +1,7 @@
 from numpy import array
 
 from lib.generators import get_identity_matrix, get_hilbert_matrix, \
-        get_random_matrix
+        get_random_symmetric_matrix
 from lib.printers import print_matrix
 
 from .methods import eigen_jacobi, eigen_lib
@@ -12,7 +12,7 @@ matrices = [
     array(get_hilbert_matrix(5)),
     array(get_identity_matrix(3)),
     array([[1, 0, 0], [0, 2, 0], [0, 0, 3]]),
-    array(get_random_matrix(3)),
+    array(get_random_symmetric_matrix(4)),
 ]
 
 choice_methods = [
@@ -36,11 +36,14 @@ def run():
         print("Library")
         el = eigen_lib(matrix)
         print(el)
+        print()
 
         for method in choice_methods:
             print("Method: ", method)
             for epsilon in epsilons:
                 ev = eigen_jacobi(matrix, method, epsilon)
                 print(ev)
+            print()
 
         print("\n")
+

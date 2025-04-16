@@ -8,7 +8,6 @@ def gg_radius(matrix, i):
     r = sum(matrix[i]) - matrix[i][i]
     return r
 
-
 def gg_radiuses_fit(matrix, eps):
     for i in range(len(matrix)):
         if gg_radius(matrix, i) >= eps:
@@ -39,7 +38,7 @@ def eigen_jacobi(matrix, choice_method, eps):
     start = time()
     success_flag = True
     while not gg_radiuses_fit(matrix, eps):
-        if time() - start > 200000:
+        if time() - start > 5:
             success_flag = False
             break
 
