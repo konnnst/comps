@@ -62,3 +62,4 @@ def nesterov(expr, epsilon=0.01):
 
 def newton(expr, eps=0.001):
     x_prev = array([0 for _ in range(expr.dim())])
+    return None
