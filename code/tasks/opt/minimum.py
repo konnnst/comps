@@ -11,3 +11,4 @@ class Minimum:
              f"minimum = {[round(float(coord), 3) for coord in self.coords]}, gradient norm = {self.grad_norm:.3f}, "
              f"{self.iterations} iterations, {self.elapsed_time:.3f} seconds elapsed")
         return s
+
