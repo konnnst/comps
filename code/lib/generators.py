@@ -28,6 +28,19 @@ def get_identity_vector(n):
     return array([0.5 for _ in range(n)], dtype="float64")
 
 
+def get_random_diagonally_dominant_matrix(n):
+    matrix = []
+    for i in range(n):
+        row = []
+        rowsum = 0
+        for j in range(n):
+            now = random.random()
+            rowsum += abs(now)
+            row.append(now)
+        row[i] = random.choice([-1, 1]) * random.randrange(2, 10) * rowsum
+        matrix.append(row)
+    return array(matrix)
+
 def get_zero_matrix(n):
     return [[0 for _ in range(n)] for _ in range(n)]
 

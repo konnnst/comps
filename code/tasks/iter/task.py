@@ -1,19 +1,27 @@
 from lib.slau import Problem
 
-from lib.generators import get_hilbert_matrix, get_random_matrix, \
-        get_identity_matrix, get_random_sparse_matrix, get_random_sparse_vector, get_random_symmetric_matrix, get_random_vector
+from lib.generators import get_random_diagonally_dominant_matrix, \
+        get_random_vector
 
-from .methods import solve_simple_iter, solve_zeidel_iter
+from .methods import simple_iter, zeidel, library
 
 
 problems = [
-        Problem(get_random_symmetric_matrix(2), get_random_vector(2)),
- #       Problem([[1, 0.99], [0.99, 0.98]], [1.99, 1.97]),
- #       Problem([[1, 0.99], [0.99, 0.98]], [2, 2]),
- #       Problem(get_hilbert_matrix(4), [1, 2, 3, 4]),
- #       Problem(get_random_matrix(4), [4, 3, 2, 1]),
- #       Problem(get_identity_matrix(4), [1, 2, 3, 4]),
-        #Problem(get_random_sparse_matrix(1000), get_random_sparse_vector(1000)),
+    Problem(get_random_diagonally_dominant_matrix(2), get_random_vector(2)),
+    Problem(get_random_diagonally_dominant_matrix(3), get_random_vector(3)),
+    Problem(get_random_diagonally_dominant_matrix(9), get_random_vector(9)),
+]
+
+methods = [
+      simple_iter,
+      zeidel,
+]
+
+epsilons = [
+    10,
+    1,
+    0.1,
+    0.001,
 ]
 
 
@@ -22,18 +30,18 @@ def run():
         print(f"Problem #{i}")
         print(problem)
 
-        for eps in [1000, 100, 1, 0.1, 0.001]:
-            print(f"Solve with eps = {eps}")
+        library_solution = library(problem)
+        print(library_solution)
+        print()
 
-            #si_solution = solve_simple_iter(problem, eps)
-            #print(f"Simple iteration solution:\n{si_solution}")
-            #print(f"Simple iteration delta = {problem.get_solution_delta(si_solution)}")
-
-            zd_solution = solve_zeidel_iter(problem, eps)
-            print(f"Zeidel solution:\n{zd_solution}")
-            print(f"Zeidel delta = {problem.get_solution_delta(zd_solution)}")
-
+        for method in methods:
+            for eps in epsilons:
+                solution = method(problem, eps)
+                print(solution)
+                print(
+                    f"||lib - {solution.method}|| = ",
+                    round(solution.distance(library_solution), 4)
+                )
             print()
 
-
-        print("\n\n\n")
+        print("\n\n")
