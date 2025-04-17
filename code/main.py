@@ -1,4 +1,4 @@
-from tasks.alleig.task import run
+from tasks.clustering.task import run
 
 
 def main():
