@@ -1,4 +1,4 @@
-from tasks.clustering.task import run
+from tasks.montecarlo.task import run
 
 
 def main():
