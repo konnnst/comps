@@ -1,4 +1,4 @@
-from tasks.iter.task import run
+from tasks.eig.task import run
 
 
 def main():
